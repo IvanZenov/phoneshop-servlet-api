@@ -14,14 +14,14 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private static AtomicLong atomicInteger = new AtomicLong(0);
+    private static AtomicLong atomicLong = new AtomicLong(0);
 
 
     public Product() {
     }
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = atomicInteger.incrementAndGet();
+        this.id = atomicLong.incrementAndGet();
         this.code = code;
         this.description = description;
         this.price = price;

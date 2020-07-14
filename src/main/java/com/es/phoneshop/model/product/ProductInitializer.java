@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ProductInitializer {
 
-    public static List<Product> createProducts(){
+    public static List<Product> createProducts() {
         List<Product> result = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");
         result.add(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));

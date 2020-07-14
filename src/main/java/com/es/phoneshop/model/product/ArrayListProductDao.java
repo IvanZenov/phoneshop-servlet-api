@@ -13,14 +13,14 @@ public class ArrayListProductDao implements ProductDao {
     private List<Product> products = createProducts();
     private static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private static ArrayListProductDao INSTANCE;
+    private static volatile ArrayListProductDao INSTANCE;
 
     private ArrayListProductDao() {}
 
-    public static ArrayListProductDao getInstance(){
-        if (INSTANCE == null){
-            synchronized (ArrayListProductDao.class){
-                if (INSTANCE == null){
+    public static ArrayListProductDao getInstance() {
+        if (INSTANCE == null) {
+            synchronized (ArrayListProductDao.class) {
+                if (INSTANCE == null) {
                     INSTANCE = new ArrayListProductDao();
                 }
             }
@@ -29,7 +29,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> getProduct(Long id){
+    public Optional<Product> getProduct(Long id) {
         return products
                 .stream()
                 .filter(product -> id.equals(product.getId()))
