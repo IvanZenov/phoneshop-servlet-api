@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -47,7 +48,20 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public void save(Product product) {
         readWriteLock.writeLock().lock();
-        products.add(product);
+        ListIterator<Product> iterator = products.listIterator();
+        boolean isExist = false;
+
+        while (iterator.hasNext()) {
+            Product next = iterator.next();
+            if (next.getId().equals(product.getId())) {
+                iterator.set(product);
+                isExist = true;
+                break;
+            }
+        }
+        if (!isExist) {
+            products.add(product);
+        }
         readWriteLock.writeLock().unlock();
     }
 
