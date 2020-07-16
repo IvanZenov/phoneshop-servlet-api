@@ -1,22 +1,23 @@
 package com.es.phoneshop.model.product;
 
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Optional;
+import com.es.phoneshop.model.enums.SortFieldWithComparator;
+import com.es.phoneshop.model.enums.SortOrder;
+
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-
-import static com.es.phoneshop.model.product.ProductInitializer.createProducts;
+import java.util.stream.Stream;
 
 public class ArrayListProductDao implements ProductDao {
 
-    private List<Product> products = createProducts();
+    private List<Product> products = new ArrayList<>();;
     private static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private static volatile ArrayListProductDao INSTANCE;
 
-    private ArrayListProductDao() {}
+    private ArrayListProductDao() {
+    }
 
     public static ArrayListProductDao getInstance() {
         if (INSTANCE == null) {
@@ -38,11 +39,23 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts() {
-        return products.stream()
-                .filter(product -> product.getPrice()!=null)
-                .filter(this::productIsInStock)
-                .collect(Collectors.toList());
+    public List<Product> findProducts(String query, String sortField, SortOrder sortOrder) {
+        //TODO: write ranking logic
+        Stream<Product> productStream = products.stream()
+                .filter(product -> product.getPrice() != null)
+                .filter(product -> query == null || query.isEmpty() || product.getDescription().contains(query))
+                .filter(this::productIsInStock);
+
+        //Default no sorting
+        if (sortField.equals("DEFAULT") && SortOrder.DEFAULT == sortOrder){
+            return productStream
+                    .collect(Collectors.toList());
+        }
+        else {
+            return productStream
+                    .sorted(SortFieldWithComparator.sortBy(sortField,sortOrder))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override

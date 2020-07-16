@@ -1,11 +1,31 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.web.listener;
 
+import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
-public class ProductInitializer {
+public class DemoDataListener implements ServletContextListener {
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        boolean insertDemoData = Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertDemoData"));
+        if (insertDemoData) {
+            for (Product product : createProducts()){
+                ArrayListProductDao.getInstance().save(product);
+            }
+        }
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
+    }
+
 
     public static List<Product> createProducts() {
         List<Product> result = new ArrayList<>();
@@ -26,5 +46,4 @@ public class ProductInitializer {
 
         return result;
     }
-
 }
