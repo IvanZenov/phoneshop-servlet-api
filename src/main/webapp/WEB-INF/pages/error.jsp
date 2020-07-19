@@ -5,8 +5,7 @@
 
 
 <tags:master pageTitle="Product List">
-    <a href="${pageContext.servletContext.contextPath}/products">Back to product list</a>
-    <h4>
-        Sorry, but product not found
-    </h4>
+    <h1>
+        Oh... We have some problem, sorry!
+    </h1>
 </tags:master>

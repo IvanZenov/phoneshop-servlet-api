@@ -1,13 +1,14 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.model.dao;
 
-import com.es.phoneshop.model.enums.SortFieldWithComparator;
-import com.es.phoneshop.model.enums.SortOrder;
+import com.es.phoneshop.model.product.Product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ArrayListProductDao implements ProductDao {
 
@@ -38,29 +39,11 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts(String query, String sortField, SortOrder sortOrder) {
-        Stream<Product> productStream = products.stream()
+    public List<Product> findProducts() {
+        return products.stream()
                 .filter(product -> product.getPrice() != null)
-                .filter(product -> query == null
-                        || query.isEmpty()
-                        || Arrays.stream(query.split(" "))
-                                .allMatch(word ->
-                                        Arrays.stream(product.getDescription().split(" ")).anyMatch(desc -> desc.contains(word))))
-                .filter(this::productIsInStock);
-
-        //Default no sorting'
-        //TODO: duplicate code, because have problem with default order (if query is null)
-        if (sortField.equals("DEFAULT") && SortOrder.DEFAULT == sortOrder) {
-            return productStream
-                    //.sorted(Comparator.comparing(product -> numberOfMatch(query,product.getDescription()),Comparator.reverseOrder()))
-                    .collect(Collectors.toList());
-        }
-        else {
-            return productStream
-                    //.sorted(Comparator.comparing(product -> numberOfMatch(query,product.getDescription()),Comparator.reverseOrder()))
-                    .sorted(SortFieldWithComparator.sortBy(sortField,sortOrder))
-                    .collect(Collectors.toList());
-        }
+                .filter(this::productIsInStock)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -88,10 +71,6 @@ public class ArrayListProductDao implements ProductDao {
         readWriteLock.writeLock().lock();
         products.removeIf(product -> id.equals(product.getId()));
         readWriteLock.writeLock().unlock();
-    }
-
-    private double numberOfMatch(String query, String desc) {
-        return query.split(" ").length/desc.split(" ").length;
     }
 
     private boolean productIsInStock(Product product){

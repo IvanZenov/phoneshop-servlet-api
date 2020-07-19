@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.listener;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.ServletContextEvent;
