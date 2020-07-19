@@ -15,7 +15,6 @@ public class ArrayListProductDao implements ProductDao {
     private static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private static volatile ArrayListProductDao INSTANCE;
-
     private ArrayListProductDao() {
     }
 
@@ -40,19 +39,25 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public List<Product> findProducts(String query, String sortField, SortOrder sortOrder) {
-        //TODO: write ranking logic
         Stream<Product> productStream = products.stream()
                 .filter(product -> product.getPrice() != null)
-                .filter(product -> query == null || query.isEmpty() || product.getDescription().contains(query))
+                .filter(product -> query == null
+                        || query.isEmpty()
+                        || Arrays.stream(query.split(" "))
+                                .allMatch(word ->
+                                        Arrays.stream(product.getDescription().split(" ")).anyMatch(desc -> desc.contains(word))))
                 .filter(this::productIsInStock);
 
-        //Default no sorting
-        if (sortField.equals("DEFAULT") && SortOrder.DEFAULT == sortOrder){
+        //Default no sorting'
+        //TODO: duplicate code, because have problem with default order (if query is null)
+        if (sortField.equals("DEFAULT") && SortOrder.DEFAULT == sortOrder) {
             return productStream
+                    //.sorted(Comparator.comparing(product -> numberOfMatch(query,product.getDescription()),Comparator.reverseOrder()))
                     .collect(Collectors.toList());
         }
         else {
             return productStream
+                    //.sorted(Comparator.comparing(product -> numberOfMatch(query,product.getDescription()),Comparator.reverseOrder()))
                     .sorted(SortFieldWithComparator.sortBy(sortField,sortOrder))
                     .collect(Collectors.toList());
         }
@@ -85,7 +90,12 @@ public class ArrayListProductDao implements ProductDao {
         readWriteLock.writeLock().unlock();
     }
 
+    private double numberOfMatch(String query, String desc) {
+        return query.split(" ").length/desc.split(" ").length;
+    }
+
     private boolean productIsInStock(Product product){
         return product.getStock()>0;
     }
+
 }

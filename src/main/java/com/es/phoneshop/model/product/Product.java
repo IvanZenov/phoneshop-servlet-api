@@ -2,6 +2,7 @@ package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Product {
@@ -15,6 +16,7 @@ public class Product {
     private int stock;
     private String imageUrl;
     private static AtomicLong atomicLong = new AtomicLong(0);
+    private List<ProductHistory> histories;
 
 
     public Product() {
@@ -86,4 +88,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public List<ProductHistory> getHistories() {
+        return histories;
+    }
+
+    public void setHistories(List<ProductHistory> histories) {
+        this.histories = histories;
+    }
 }

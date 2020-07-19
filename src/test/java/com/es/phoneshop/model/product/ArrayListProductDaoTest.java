@@ -2,6 +2,7 @@ package com.es.phoneshop.model.product;
 
 import org.junit.Test;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Currency;
 
 import static org.junit.Assert.*;
@@ -36,5 +37,20 @@ public class ArrayListProductDaoTest
         arrayListProductDao.delete(product.getId());
         boolean isPresent = arrayListProductDao.getProduct(product.getId()).isPresent();
         assertFalse(isPresent);
+    }
+
+    @Test
+    public void lol(){
+        String description = "Samsung Galaxy S III";
+        String falseQuery = "Samsung Kek";
+        String query = "Samsung";
+
+        String[] s1 = description.split(" ");
+        String[] s2 = query.split(" ");
+
+        boolean b = Arrays.stream(s2).allMatch(word -> Arrays.stream(s1).anyMatch(desc -> desc.contains(word)));
+        System.out.println(b);
+
+
     }
 }

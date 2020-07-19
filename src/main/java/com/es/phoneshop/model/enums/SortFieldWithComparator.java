@@ -7,7 +7,7 @@ import java.util.Comparator;
 public enum SortFieldWithComparator {
     DESCRIPTION(Comparator.comparing(Product::getDescription)),
     PRICE(Comparator.comparing(Product::getPrice)),
-    DEFAULT;
+    DEFAULT();
 
     private Comparator<Product> comparator;
     SortFieldWithComparator(Comparator<Product> comparator) {
@@ -25,6 +25,7 @@ public enum SortFieldWithComparator {
         else {
             return comparator.reversed();
         }
-
     }
+
+
 }
