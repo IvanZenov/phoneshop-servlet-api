@@ -16,20 +16,22 @@ public class Product {
     private int stock;
     private String imageUrl;
     private static AtomicLong atomicLong = new AtomicLong(0);
-    private List<ProductHistory> histories;
+    private List<PriceHistory> histories;
 
 
     public Product() {
     }
 
-    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(String code, String description, BigDecimal price, Currency currency,
+                   int stock, String imageUrl, List<PriceHistory> histories) {
         this.id = atomicLong.incrementAndGet();
         this.code = code;
         this.description = description;
-        this.price = price;
         this.currency = currency;
         this.stock = stock;
+        this.price = price;
         this.imageUrl = imageUrl;
+        this.histories = histories;
     }
 
     public Long getId() {
@@ -88,11 +90,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public List<ProductHistory> getHistories() {
+    public List<PriceHistory> getHistories() {
         return histories;
     }
 
-    public void setHistories(List<ProductHistory> histories) {
+    public void setHistories(List<PriceHistory> histories) {
         this.histories = histories;
     }
 }

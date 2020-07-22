@@ -1,11 +1,11 @@
 package com.es.phoneshop.model.dao;
 
+import com.es.phoneshop.model.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -31,11 +31,12 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> getProduct(Long id) {
+    public Product getProduct(Long id) {
         return products
                 .stream()
                 .filter(product -> id.equals(product.getId()))
-                .findAny();
+                .findAny()
+                .orElseThrow(()->new ProductNotFoundException("Product with id " + id + " not found"));
     }
 
     @Override
@@ -75,6 +76,10 @@ public class ArrayListProductDao implements ProductDao {
 
     private boolean productIsInStock(Product product){
         return product.getStock()>0;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
 }

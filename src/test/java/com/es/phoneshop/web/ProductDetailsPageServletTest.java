@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDetailsPageServletTest {
@@ -29,24 +27,26 @@ public class ProductDetailsPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private Product product;
+    @Mock
+    private ArrayListProductDao arrayListProductDao;
 
-    private ProductListPageServlet servlet = new ProductListPageServlet();
+    private ProductDetailsPageServlet servlet = new ProductDetailsPageServlet();
 
 
     @Before
-    public void setup(){
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getPathInfo()).thenReturn("/1");
+        when(arrayListProductDao.getProduct(1L)).thenReturn(product);
+        when(request.getRequestDispatcher("/WEB-INF/pages/product.jsp")).thenReturn(requestDispatcher);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
 
-        verify(requestDispatcher).forward(request, response);
-        //verify(request).setAttribute(eq("product"),any());
+        verify(request).setAttribute("product", product);
+        verify(requestDispatcher, times(1)).forward(request, response);
     }
-
-
 
 }
