@@ -4,7 +4,10 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.dao.ProductDao;
+import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
+
+import java.util.Optional;
 
 public class CartServiceImpl implements CartService{
 
@@ -32,10 +35,26 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public void add(Long productId, int quantity) {
+    public void add(Long productId, int quantity) throws OutOfStockException {
+
         Product product = productDao.getProduct(productId);
 
-        cart.getItems().add(new CartItem(product, quantity));
+        Optional<CartItem> productInCart = cart.getItems().stream()
+                .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
+                .findAny();
 
+        int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
+        int availableQuantity = product.getStock() - productInCartQuantity;
+
+        if (availableQuantity < quantity) {
+            throw new OutOfStockException(product, quantity, product.getStock());
+        }
+
+        if (productInCart.isPresent()){
+            productInCart.get().setQuantity(productInCartQuantity + quantity);
+        }
+        else {
+            cart.getItems().add(new CartItem(product, quantity));
+        }
     }
 }
