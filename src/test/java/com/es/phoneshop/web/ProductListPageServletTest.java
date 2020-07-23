@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.web.servlet.ProductListPageServlet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,6 @@ public class ProductListPageServletTest {
 
     @Before
     public void setup(){
-
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 

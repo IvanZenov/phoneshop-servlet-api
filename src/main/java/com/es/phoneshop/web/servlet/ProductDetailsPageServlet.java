@@ -1,12 +1,15 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlet;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.dao.ProductDao;
 import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.exceptions.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.service.CartService;
-import com.es.phoneshop.model.service.CartServiceImpl;
+import com.es.phoneshop.model.service.impl.CartServiceImpl;
+import com.es.phoneshop.model.service.RecentlyViewProductService;
+import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,28 +19,34 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.List;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductDao productDao;
     private CartService cartService;
+    private RecentlyViewProductService viewProductService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
+        viewProductService = RecentlyViewProductServiceImpl.getInstance();
+
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Product> recentlyView = viewProductService.getRecentlyViewProduct(req);
         try {
             Long id = parseProductId(req);
+            viewProductService.add(recentlyView,productDao.getProduct(id).getId());
             req.setAttribute("product", productDao.getProduct(id));
             req.setAttribute("cart",cartService.getCart(req));
+            req.setAttribute("viewProducts", viewProductService.getRecentlyViewProduct(req));
 
             req.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(req, resp);
-
         }
         catch (ProductNotFoundException | NumberFormatException ex) {
             resp.sendError(404);
@@ -52,7 +61,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         int quantity;
         try {
             NumberFormat format = NumberFormat.getInstance(req.getLocale());
-            quantity = (Integer) format.parse(quantityString).intValue();
+            quantity = format.parse(quantityString).intValue();
         }
         catch (NumberFormatException | ParseException ex) {
             req.setAttribute("error", "Not a number");

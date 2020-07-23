@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.service;
+package com.es.phoneshop.model.service.impl;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
@@ -6,11 +6,12 @@ import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.dao.ProductDao;
 import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.service.CartService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     private ProductDao productDao;
     private static final String CART_SESSION_ATTRIBUTE = CartServiceImpl.class.getName() + ".cart";

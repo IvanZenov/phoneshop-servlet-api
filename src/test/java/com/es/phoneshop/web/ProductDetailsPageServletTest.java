@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.web.servlet.ProductDetailsPageServlet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

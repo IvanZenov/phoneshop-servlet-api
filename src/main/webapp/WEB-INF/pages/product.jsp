@@ -70,5 +70,7 @@
       <button type="submit">Add to cart</button>
   </form>
 
+  ${viewProducts}
+
 
 </tags:master>

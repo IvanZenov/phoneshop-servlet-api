@@ -47,4 +47,7 @@
       </tr>
     </c:forEach>
   </table>
+
+  ${viewProducts}
+
 </tags:master>

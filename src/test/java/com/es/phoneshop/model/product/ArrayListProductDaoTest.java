@@ -2,7 +2,7 @@ package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.enums.SortOrder;
-import com.es.phoneshop.model.service.ProductService;
+import com.es.phoneshop.model.service.impl.ProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
