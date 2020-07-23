@@ -7,12 +7,14 @@ import com.es.phoneshop.model.dao.ProductDao;
 import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService{
 
-    private Cart cart = new Cart();
     private ProductDao productDao;
+    private static final String CART_SESSION_ATTRIBUTE = CartServiceImpl.class.getName() + ".cart";
+
     private static volatile CartServiceImpl INSTANCE;
     private CartServiceImpl() {
         productDao = ArrayListProductDao.getInstance();
@@ -30,12 +32,16 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public Cart getCart() {
+    public synchronized Cart getCart(HttpServletRequest request) {
+        Cart cart = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
+        if (cart == null) {
+            request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, cart = new Cart());
+        }
         return cart;
     }
 
     @Override
-    public void add(Long productId, int quantity) throws OutOfStockException {
+    public void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
 
         Product product = productDao.getProduct(productId);
 
