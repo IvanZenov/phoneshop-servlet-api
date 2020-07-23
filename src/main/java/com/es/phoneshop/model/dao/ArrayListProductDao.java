@@ -1,22 +1,23 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.model.dao;
 
+import com.es.phoneshop.model.exceptions.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
-import static com.es.phoneshop.model.product.ProductInitializer.createProducts;
-
 public class ArrayListProductDao implements ProductDao {
 
-    private List<Product> products = createProducts();
+    private List<Product> products = new ArrayList<>();;
     private static ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private static volatile ArrayListProductDao INSTANCE;
-
-    private ArrayListProductDao() {}
+    private ArrayListProductDao() {
+    }
 
     public static ArrayListProductDao getInstance() {
         if (INSTANCE == null) {
@@ -30,17 +31,18 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> getProduct(Long id) {
+    public Product getProduct(Long id) {
         return products
                 .stream()
                 .filter(product -> id.equals(product.getId()))
-                .findAny();
+                .findAny()
+                .orElseThrow(()->new ProductNotFoundException("Product with id " + id + " not found"));
     }
 
     @Override
     public List<Product> findProducts() {
         return products.stream()
-                .filter(product -> product.getPrice()!=null)
+                .filter(product -> product.getPrice() != null)
                 .filter(this::productIsInStock)
                 .collect(Collectors.toList());
     }
@@ -75,4 +77,9 @@ public class ArrayListProductDao implements ProductDao {
     private boolean productIsInStock(Product product){
         return product.getStock()>0;
     }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
 }
