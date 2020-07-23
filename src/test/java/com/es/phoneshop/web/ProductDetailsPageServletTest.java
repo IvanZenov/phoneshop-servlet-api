@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,7 +18,8 @@ import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ProductDetailsPageServletTest.class)
 public class ProductDetailsPageServletTest {
 
     @Mock
@@ -35,6 +38,7 @@ public class ProductDetailsPageServletTest {
 
     @Before
     public void setup() {
+        Whitebox.setInternalState(ArrayListProductDao.class, "INSTANCE", arrayListProductDao);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getPathInfo()).thenReturn("/1");
         when(arrayListProductDao.getProduct(1L)).thenReturn(product);
@@ -49,4 +53,13 @@ public class ProductDetailsPageServletTest {
         verify(requestDispatcher, times(1)).forward(request, response);
     }
 
+    @Test
+    public void testDoGetProductFound() throws ServletException, IOException {
+        when(request.getRequestURI()).thenReturn("/products/2");
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute("product", product);
+        verify(request).getRequestDispatcher("/WEB-INF/pages/product.jsp");
+        verify(requestDispatcher).forward(request, response);
+    }
 }
