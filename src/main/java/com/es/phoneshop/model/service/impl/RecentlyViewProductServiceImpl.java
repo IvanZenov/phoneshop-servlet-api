@@ -45,14 +45,13 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
     public void add(List<Product> recentlyViewedProducts, Long productId) {
         Product product = productDao.getProduct(productId);
 
-        if (!recentlyViewedProducts.contains(product)) {
-            recentlyViewedProducts.add(product);
+        if (recentlyViewedProducts.contains(product)) {
+            recentlyViewedProducts.remove(product);
         }
-
-        if (recentlyViewedProducts.size() > LIMIT_OF_VIEW_PRODUCT) {
-            recentlyViewedProducts.remove(LIMIT_OF_VIEW_PRODUCT);
+        if (recentlyViewedProducts.size() == LIMIT_OF_VIEW_PRODUCT) {
+            recentlyViewedProducts.remove(LIMIT_OF_VIEW_PRODUCT - 1);
         }
-
+        recentlyViewedProducts.add(0, product);
     }
 
 

@@ -36,8 +36,10 @@
           <img class="product-tile" src="${product.imageUrl}">
         </td>
         <td>
-            <a href="${pageContext.servletContext.contextPath}/products/${product.id}">  </a>
-            ${product.description}
+            <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
+                ${product.description}
+            </a>
+
         </td>
         <td class="price">
           <a href="${pageContext.servletContext.contextPath}/productPriceHistory/${product.id}">
