@@ -70,7 +70,24 @@
       <button type="submit">Add to cart</button>
   </form>
 
-  ${viewProducts}
+
+  <h1>Recently viewed</h1>
+  <table>
+    <thead>
+    <c:forEach var="product" items="${viewProducts}">
+      <td>
+        <img class="product-tile"
+             src="${product.imageUrl}">
+        <br>
+        <a href="<c:url value="/products/${product.id}"/>">
+            ${product.description}
+        </a>
+        <br>
+        <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+      </td>
+    </c:forEach>
+    </thead>
+  </table>
 
 
 </tags:master>

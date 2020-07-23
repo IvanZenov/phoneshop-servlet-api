@@ -13,6 +13,7 @@ import java.util.List;
 public class RecentlyViewProductServiceImpl implements RecentlyViewProductService {
     private static volatile RecentlyViewProductServiceImpl INSTANCE;
     private static final String RECENTLY_VIEW_SESSION_ATTRIBUTE = RecentlyViewProductService.class.getName() + ".recentlyView";
+    private static final int LIMIT_OF_VIEW_PRODUCT = 3;
     private ProductDao productDao =  ArrayListProductDao.getInstance();
 
 
@@ -40,11 +41,18 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
         return recentlyView;
     }
 
-    //TODO: Do not add the same product, Limit of 3
     @Override
     public void add(List<Product> recentlyViewedProducts, Long productId) {
         Product product = productDao.getProduct(productId);
-        recentlyViewedProducts.add(product);
+
+        if (!recentlyViewedProducts.contains(product)) {
+            recentlyViewedProducts.add(product);
+        }
+
+        if (recentlyViewedProducts.size() > LIMIT_OF_VIEW_PRODUCT) {
+            recentlyViewedProducts.remove(LIMIT_OF_VIEW_PRODUCT);
+        }
+
     }
 
 

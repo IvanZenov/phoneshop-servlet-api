@@ -37,7 +37,6 @@ public class ProductListPageServlet extends HttpServlet {
         String sortOrder = Optional.ofNullable(request.getParameter("order")).orElse("DEFAULT").toUpperCase();
         List<Product> recentlyView = viewProductService.getRecentlyViewProduct(request);
 
-
         request.setAttribute("products", productService
                 .sortProductsWithField(productService.findProducts(query),
                         sortField,
