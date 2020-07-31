@@ -46,22 +46,22 @@ public class CartServiceImpl implements CartService {
 
         Product product = productDao.getProduct(productId);
 
+        if (product.getStock() < quantity) {
+            throw new OutOfStockException(product,quantity,product.getStock());
+        }
+
         Optional<CartItem> productInCart = cart.getItems().stream()
                 .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
                 .findAny();
 
-        int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
-        int availableQuantity = product.getStock() - productInCartQuantity;
-
-        if (availableQuantity < quantity) {
-            throw new OutOfStockException(product, quantity, product.getStock());
-        }
-
-        if (productInCart.isPresent()){
-            productInCart.get().setQuantity(productInCartQuantity + quantity);
+        if (productInCart.isPresent()) {
+            CartItem cartItem = productInCart.get();
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
         }
         else {
-            cart.getItems().add(new CartItem(product, quantity));
+            cart.getItems().add(new CartItem(product,quantity));
         }
+        //don't control if the user changes their mind
+        product.setStock(product.getStock() - quantity);
     }
 }

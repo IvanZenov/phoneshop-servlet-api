@@ -1,9 +1,9 @@
 package com.es.phoneshop.model.cart;
 
-import com.es.phoneshop.model.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Cart {
     List<CartItem> items;
@@ -26,4 +26,5 @@ public class Cart {
                 "items=" + items +
                 '}';
     }
+
 }

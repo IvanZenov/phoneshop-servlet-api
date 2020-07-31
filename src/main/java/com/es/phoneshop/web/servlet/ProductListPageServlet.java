@@ -1,7 +1,5 @@
 package com.es.phoneshop.web.servlet;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
-import com.es.phoneshop.model.dao.ProductDao;
 import com.es.phoneshop.model.enums.SortOrder;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.service.RecentlyViewProductService;
@@ -35,6 +33,7 @@ public class ProductListPageServlet extends HttpServlet {
         String query = request.getParameter("query");
         String sortField = Optional.ofNullable(request.getParameter("sort")).orElse("DEFAULT").toUpperCase();
         String sortOrder = Optional.ofNullable(request.getParameter("order")).orElse("DEFAULT").toUpperCase();
+
         List<Product> recentlyView = viewProductService.getRecentlyViewProduct(request);
 
         request.setAttribute("products", productService

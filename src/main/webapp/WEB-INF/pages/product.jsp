@@ -27,7 +27,7 @@
   </c:if>
 
 
-    <form method="post">
+    <form method="post" action="${pageContext.request.contextPath}/products/">
       <table>
         <tr>
           <td>

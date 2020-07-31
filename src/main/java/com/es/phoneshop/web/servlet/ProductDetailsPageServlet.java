@@ -7,8 +7,8 @@ import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.service.CartService;
-import com.es.phoneshop.model.service.impl.CartServiceImpl;
 import com.es.phoneshop.model.service.RecentlyViewProductService;
+import com.es.phoneshop.model.service.impl.CartServiceImpl;
 import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
 
 import javax.servlet.ServletConfig;
@@ -33,7 +33,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
         productDao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
         viewProductService = RecentlyViewProductServiceImpl.getInstance();
-
     }
 
     @Override
@@ -45,7 +44,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
             req.setAttribute("product", productDao.getProduct(id));
             req.setAttribute("cart",cartService.getCart(req));
             req.setAttribute("viewProducts", viewProductService.getRecentlyViewProduct(req));
-
             req.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(req, resp);
         }
         catch (ProductNotFoundException | NumberFormatException ex) {

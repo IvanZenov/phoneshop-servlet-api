@@ -6,7 +6,6 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.service.RecentlyViewProductService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,6 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
     private static final String RECENTLY_VIEW_SESSION_ATTRIBUTE = RecentlyViewProductService.class.getName() + ".recentlyView";
     private static final int LIMIT_OF_VIEW_PRODUCT = 3;
     private ProductDao productDao =  ArrayListProductDao.getInstance();
-
 
     private RecentlyViewProductServiceImpl(){
     }
@@ -30,7 +28,6 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
         }
         return INSTANCE;
     }
-
 
     @Override
     public List<Product> getRecentlyViewProduct(HttpServletRequest request) {
@@ -53,6 +50,4 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
         }
         recentlyViewedProducts.add(0, product);
     }
-
-
 }
