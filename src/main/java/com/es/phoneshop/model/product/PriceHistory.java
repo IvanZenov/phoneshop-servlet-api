@@ -3,6 +3,7 @@ package com.es.phoneshop.model.product;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
+import java.util.Objects;
 
 public class PriceHistory {
     private LocalDate startDate;
@@ -37,5 +38,20 @@ public class PriceHistory {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PriceHistory that = (PriceHistory) o;
+        return Objects.equals(startDate, that.startDate) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(currency, that.currency);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startDate, price, currency);
     }
 }

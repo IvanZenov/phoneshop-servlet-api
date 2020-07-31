@@ -1,10 +1,9 @@
-package com.es.phoneshop.model.service;
+package com.es.phoneshop.model.service.impl;
 
 import com.es.phoneshop.model.dao.ArrayListProductDao;
 import com.es.phoneshop.model.enums.SortFieldWithComparator;
 import com.es.phoneshop.model.enums.SortOrder;
 import com.es.phoneshop.model.product.Product;
-
 
 import java.util.Arrays;
 import java.util.Comparator;

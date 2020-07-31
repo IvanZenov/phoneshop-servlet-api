@@ -36,8 +36,10 @@
           <img class="product-tile" src="${product.imageUrl}">
         </td>
         <td>
-            <a href="${pageContext.servletContext.contextPath}/products/${product.id}">  </a>
-            ${product.description}
+            <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
+                ${product.description}
+            </a>
+
         </td>
         <td class="price">
           <a href="${pageContext.servletContext.contextPath}/productPriceHistory/${product.id}">
@@ -46,5 +48,24 @@
         </td>
       </tr>
     </c:forEach>
+  </table>
+
+
+  <h1>Recently viewed</h1>
+  <table>
+    <thead>
+    <c:forEach var="product" items="${viewProducts}">
+      <td>
+        <img class="product-tile"
+             src="${product.imageUrl}">
+        <br>
+        <a href="<c:url value="/products/${product.id}"/>">
+            ${product.description}
+        </a>
+        <br>
+        <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+      </td>
+    </c:forEach>
+    </thead>
   </table>
 </tags:master>
