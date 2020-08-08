@@ -66,4 +66,25 @@ public class CartServiceImpl implements CartService {
         //don't control if the user changes their mind
         product.setStock(product.getStock() - quantity);
     }
+
+    @Override
+    public void update(Cart cart, Long productId, int quantity) throws OutOfStockException {
+        Product product = productDao.getProduct(productId);
+
+        Optional<CartItem> productInCart = cart.getItems().stream()
+                .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
+                .findAny();
+
+        int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
+
+        //add method change the product directly, so we return what was in the cart to product
+        if (product.getStock() + productInCartQuantity < quantity) {
+            throw new OutOfStockException(product,quantity,product.getStock() + productInCartQuantity);
+        }
+
+        CartItem cartItem = productInCart.get();
+        cartItem.setQuantity(quantity);
+
+        product.setStock(product.getStock() + productInCartQuantity - quantity);
+    }
 }
