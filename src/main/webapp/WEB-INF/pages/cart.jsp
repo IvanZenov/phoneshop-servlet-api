@@ -9,9 +9,13 @@
         Welcome to Expert-Soft training!
     </p>
 
-    <c:if test="${not empty success}">
-        <p class="success">
-                ${success}
+    <div class="success">
+        ${param.message}
+    </div>
+
+    <c:if test="${not empty errors}">
+        <p class="error">
+            Problems updating a product :(
         </p>
     </c:if>
 
@@ -37,6 +41,7 @@
                 <td class="price">
                     Quantity
                 </td>
+                <td></td>
             </tr>
             </thead>
 
@@ -69,6 +74,9 @@
                         </c:if>
                         <input type="hidden" name="productId" value="${item.product.id  }">
                     </td>
+                    <td>
+                        <button form="deleteCartItem" formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem/${item.product.id}">Delete</button>
+                    </td>
                 </tr>
             </c:forEach>
         </table>
@@ -76,5 +84,6 @@
             <button>Update</button>
         </p>
     </form>
+    <form id="deleteCartItem" method="post"></form>
 
 </tags:master>

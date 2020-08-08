@@ -51,13 +51,19 @@ public class CartPageServlet extends HttpServlet {
                 quantity = format.parse(quantities[i]).intValue();
                 Cart cart = cartService.getCart(req);
                 cartService.update(cart, productId, quantity);
+
             }
             catch (NumberFormatException | ParseException | OutOfStockException ex) {
                 handleError(errors,productId,ex);
             }
         }
-        req.setAttribute("errors",errors);
-        doGet(req,resp);
+        if (errors.isEmpty()) {
+            resp.sendRedirect(req.getContextPath() + "/cart?message=Cart updated successfully");
+        }
+        else {
+            req.setAttribute("errors",errors);
+            doGet(req,resp);
+        }
     }
     //add this method, because problem with initialization quantity
     private void handleError(Map<Long, String> errors, Long productId, Exception ex) {

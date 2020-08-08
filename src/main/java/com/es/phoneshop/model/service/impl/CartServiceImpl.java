@@ -50,9 +50,7 @@ public class CartServiceImpl implements CartService {
             throw new OutOfStockException(product,quantity,product.getStock());
         }
 
-        Optional<CartItem> productInCart = cart.getItems().stream()
-                .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
-                .findAny();
+        Optional<CartItem> productInCart = getOptionalCartItem(cart, productId);
 
         if (productInCart.isPresent()) {
             CartItem cartItem = productInCart.get();
@@ -71,9 +69,7 @@ public class CartServiceImpl implements CartService {
     public void update(Cart cart, Long productId, int quantity) throws OutOfStockException {
         Product product = productDao.getProduct(productId);
 
-        Optional<CartItem> productInCart = cart.getItems().stream()
-                .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
-                .findAny();
+        Optional<CartItem> productInCart = getOptionalCartItem(cart,productId);
 
         int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
 
@@ -86,5 +82,22 @@ public class CartServiceImpl implements CartService {
         cartItem.setQuantity(quantity);
 
         product.setStock(product.getStock() + productInCartQuantity - quantity);
+    }
+
+    @Override
+    public void delete(Cart cart, Long productId) {
+        Optional<CartItem> productInCart = getOptionalCartItem(cart, productId);
+        Product product = productInCart.get().getProduct();
+
+        int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
+
+        cart.getItems().removeIf(cartItem -> productId.equals(cartItem.getProduct().getId()));
+        product.setStock(product.getStock() + productInCartQuantity);
+    }
+
+    private Optional<CartItem> getOptionalCartItem (Cart cart, Long productId) {
+        return cart.getItems().stream()
+                .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
+                .findAny();
     }
 }
