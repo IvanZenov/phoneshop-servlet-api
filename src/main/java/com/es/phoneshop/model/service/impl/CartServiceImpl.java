@@ -9,7 +9,9 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.service.CartService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CartServiceImpl implements CartService {
 
@@ -63,6 +65,7 @@ public class CartServiceImpl implements CartService {
 
         //don't control if the user changes their mind
         product.setStock(product.getStock() - quantity);
+        recalculateCart(cart);
     }
 
     @Override
@@ -82,6 +85,7 @@ public class CartServiceImpl implements CartService {
         cartItem.setQuantity(quantity);
 
         product.setStock(product.getStock() + productInCartQuantity - quantity);
+        recalculateCart(cart);
     }
 
     @Override
@@ -93,11 +97,28 @@ public class CartServiceImpl implements CartService {
 
         cart.getItems().removeIf(cartItem -> productId.equals(cartItem.getProduct().getId()));
         product.setStock(product.getStock() + productInCartQuantity);
+
+        recalculateCart(cart);
     }
 
     private Optional<CartItem> getOptionalCartItem (Cart cart, Long productId) {
         return cart.getItems().stream()
                 .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
                 .findAny();
+    }
+
+    private void recalculateCart(Cart cart) {
+
+        cart.setTotalQuantity(cart.getItems().stream()
+                .map(CartItem::getQuantity)
+                .mapToInt(value -> value)
+                .sum());
+
+        cart.setTotalCost(cart.getItems().stream()
+                .map(cartItem -> cartItem.getProduct()
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
+                )
+                .reduce(BigDecimal.ZERO,BigDecimal::add));
     }
 }
