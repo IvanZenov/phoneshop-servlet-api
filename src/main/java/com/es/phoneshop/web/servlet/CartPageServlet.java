@@ -22,7 +22,6 @@ public class CartPageServlet extends HttpServlet {
     private CartService cartService;
     private static final String CART_PAGE_JSP = "cart";
 
-
     @Override
     public void init(ServletConfig config) throws ServletException {
         cartService = CartServiceImpl.getInstance();
@@ -35,7 +34,6 @@ public class CartPageServlet extends HttpServlet {
         req.setAttribute("cart", cart);
         req.getRequestDispatcher(ServletUtil.createViewPath(CART_PAGE_JSP)).forward(req,resp);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,17 +52,13 @@ public class CartPageServlet extends HttpServlet {
                 Cart cart = cartService.getCart(req);
                 cartService.update(cart, productId, quantity);
 
+                resp.sendRedirect(req.getContextPath() + "/cart?message=Cart updated successfully");
             }
             catch (NumberFormatException | ParseException | OutOfStockException ex) {
                 ServletUtil.handleError(errors,productId,ex);
+                req.setAttribute("errors",errors);
+                doGet(req,resp);
             }
-        }
-        if (errors.isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + "/cart?message=Cart updated successfully");
-        }
-        else {
-            req.setAttribute("errors",errors);
-            doGet(req,resp);
         }
     }
 

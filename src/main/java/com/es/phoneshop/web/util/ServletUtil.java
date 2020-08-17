@@ -6,8 +6,8 @@ import java.text.ParseException;
 import java.util.Map;
 
 public class ServletUtil {
-    public static final String PREFIX = "/WEB-INF/pages/";
-    public static final String SUFFIX = ".jsp";
+    private static final String PREFIX = "/WEB-INF/pages/";
+    private static final String SUFFIX = ".jsp";
 
     private ServletUtil(){}
 

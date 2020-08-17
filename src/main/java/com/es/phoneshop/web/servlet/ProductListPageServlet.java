@@ -66,20 +66,18 @@ public class ProductListPageServlet extends HttpServlet {
         Map<Long, String> errors = new HashMap<>();
 
         Long productId = Long.valueOf(productIdString);
+
         int quantity;
         try {
             NumberFormat format = NumberFormat.getInstance(req.getLocale());
             quantity = format.parse(quantities).intValue();
             Cart cart = cartService.getCart(req);
             cartService.add(cart, productId, quantity);
+            resp.sendRedirect(req.getContextPath() + "/cart?message=Item successfully added to cart");
+
         } catch (NumberFormatException | ParseException | OutOfStockException ex) {
             ServletUtil.handleError(errors,productId,ex);
-        }
 
-        if(errors.isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + "/cart?message=Item successfully added to cart");
-        }
-        else {
             req.setAttribute("errors", errors);
             doGet(req, resp);
         }
