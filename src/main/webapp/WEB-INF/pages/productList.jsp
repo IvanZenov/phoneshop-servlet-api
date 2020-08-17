@@ -16,37 +16,56 @@
   </form>
   <table>
     <thead>
-      <tr>
-        <td>Image</td>
-        <td>
-          Description
-          <tags:sortLink order="asc" sort="description"/>
-          <tags:sortLink order="desc" sort="description"/>
-        </td>
-        <td class="price">
-          Price
-          <tags:sortLink order="asc" sort="price"/>
-          <tags:sortLink order="desc" sort="price"/>
-        </td>
-      </tr>
+    <tr>
+      <td>Image</td>
+      <td>
+        Description
+        <tags:sortLink order="asc" sort="description"/>
+        <tags:sortLink order="desc" sort="description"/>
+      </td>
+      <td>Quantity</td>
+      <td class="price">
+        Price
+        <tags:sortLink order="asc" sort="price"/>
+        <tags:sortLink order="desc" sort="price"/>
+      </td>
+      <td></td>
+    </tr>
     </thead>
     <c:forEach var="product" items="${products}">
-      <tr>
-        <td>
-          <img class="product-tile" src="${product.imageUrl}">
-        </td>
-        <td>
+      <form name="add" action="${pageContext.request.contextPath}/products" method="post">
+        <tr>
+          <td>
+            <img class="product-tile" src="${product.imageUrl}">
+          </td>
+
+          <td>
             <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
                 ${product.description}
             </a>
+          </td>
 
-        </td>
-        <td class="price">
-          <a href="${pageContext.servletContext.contextPath}/productPriceHistory/${product.id}">
-            <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
-          </a>
-        </td>
-      </tr>
+          <td>
+            <input name="quantity" value="1">
+            <input type="hidden" value="${product.id}" name="productId">
+            <c:if test="${not empty errors[product.id]}">
+              <div class="error">
+                  ${errors[product.id]}
+              </div>
+            </c:if>
+          </td>
+
+          <td class="price">
+            <a href="${pageContext.servletContext.contextPath}/productPriceHistory/${product.id}">
+              <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+            </a>
+          </td>
+
+          <td><input type="submit" name="addButton" value="Add to cart"></td>
+
+        </tr>
+      </form>
+
     </c:forEach>
   </table>
 

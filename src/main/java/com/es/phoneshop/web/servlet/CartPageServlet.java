@@ -4,6 +4,7 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.service.CartService;
 import com.es.phoneshop.model.service.impl.CartServiceImpl;
+import com.es.phoneshop.web.util.ServletUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class CartPageServlet extends HttpServlet {
 
     private CartService cartService;
+    private static final String CART_PAGE_JSP = "cart";
 
 
     @Override
@@ -31,7 +33,7 @@ public class CartPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cart cart = cartService.getCart(req);
         req.setAttribute("cart", cart);
-        req.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(req,resp);
+        req.getRequestDispatcher(ServletUtil.createViewPath(CART_PAGE_JSP)).forward(req,resp);
     }
 
 
@@ -54,7 +56,7 @@ public class CartPageServlet extends HttpServlet {
 
             }
             catch (NumberFormatException | ParseException | OutOfStockException ex) {
-                handleError(errors,productId,ex);
+                ServletUtil.handleError(errors,productId,ex);
             }
         }
         if (errors.isEmpty()) {
@@ -65,15 +67,5 @@ public class CartPageServlet extends HttpServlet {
             doGet(req,resp);
         }
     }
-    //add this method, because problem with initialization quantity
-    private void handleError(Map<Long, String> errors, Long productId, Exception ex) {
-        if (ex.getClass().equals(ParseException.class)||ex.getClass().equals(NumberFormatException.class)) {
-            errors.put(productId,"Not a number");
-        }
-        if (ex.getClass().equals(OutOfStockException.class)) {
-            errors.put(productId,"Out of stock, max available " + ((OutOfStockException) ex).getStockAvailable());
-        }
-    }
-
 
 }

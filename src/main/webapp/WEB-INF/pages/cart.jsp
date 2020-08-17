@@ -30,10 +30,11 @@
             <thead>
             <tr>
                 <td>Image</td>
+
                 <td>
                     Description
-
                 </td>
+
                 <td class="price">
                     Price
                 </td>
@@ -90,6 +91,7 @@
             <button>Update</button>
         </p>
     </form>
+
     <form id="deleteCartItem" method="post"></form>
 
 </tags:master>
