@@ -10,6 +10,7 @@ import com.es.phoneshop.model.service.CartService;
 import com.es.phoneshop.model.service.RecentlyViewProductService;
 import com.es.phoneshop.model.service.impl.CartServiceImpl;
 import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
+import com.es.phoneshop.web.util.ServletUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -26,6 +27,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartService cartService;
     private RecentlyViewProductService viewProductService;
+    private static final String PRODUCT_DETAILS_JSP = "product";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -41,10 +43,12 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             Long id = parseProductId(req);
             viewProductService.add(recentlyView,productDao.getProduct(id).getId());
+
             req.setAttribute("product", productDao.getProduct(id));
             req.setAttribute("cart",cartService.getCart(req));
             req.setAttribute("viewProducts", viewProductService.getRecentlyViewProduct(req));
-            req.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(req, resp);
+
+            req.getRequestDispatcher(ServletUtil.createViewPath(PRODUCT_DETAILS_JSP)).forward(req, resp);
         }
         catch (ProductNotFoundException | NumberFormatException ex) {
             resp.sendError(404);
@@ -78,7 +82,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/products/" + productId);
 
     }
-
 
     private Long parseProductId (HttpServletRequest req) {
         String productId = req.getPathInfo().substring(1);

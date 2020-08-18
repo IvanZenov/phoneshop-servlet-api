@@ -27,7 +27,7 @@
   </c:if>
 
 
-    <form method="post" action="${pageContext.request.contextPath}/products/">
+    <form method="post" action="${pageContext.request.contextPath}/products/${product.id}">
       <table>
         <tr>
           <td>
