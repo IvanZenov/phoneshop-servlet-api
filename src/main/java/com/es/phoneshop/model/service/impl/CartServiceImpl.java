@@ -11,7 +11,6 @@ import com.es.phoneshop.model.service.CartService;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class CartServiceImpl implements CartService {
 
@@ -80,24 +79,26 @@ public class CartServiceImpl implements CartService {
             throw new OutOfStockException(product,quantity,product.getStock() + productInCartQuantity);
         }
 
-        CartItem cartItem = productInCart.get();
-        cartItem.setQuantity(quantity);
+        productInCart.ifPresent( cartItem -> {
+            cartItem.setQuantity(quantity);
 
-        product.setStock(product.getStock() + productInCartQuantity - quantity);
-        recalculateCart(cart);
+            product.setStock(product.getStock() + productInCartQuantity - quantity);
+            recalculateCart(cart);
+        });
     }
 
     @Override
     public void delete(Cart cart, Long productId) {
         Optional<CartItem> productInCart = getOptionalCartItem(cart, productId);
-        Product product = productInCart.get().getProduct();
 
-        int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
+        productInCart.map(CartItem::getProduct).ifPresent(product -> {
+            int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
 
-        cart.getItems().removeIf(cartItem -> productId.equals(cartItem.getProduct().getId()));
-        product.setStock(product.getStock() + productInCartQuantity);
+            cart.getItems().removeIf(cartItem -> productId.equals(cartItem.getProduct().getId()));
+            product.setStock(product.getStock() + productInCartQuantity);
 
-        recalculateCart(cart);
+            recalculateCart(cart);
+        });
     }
 
     private Optional<CartItem> getOptionalCartItem (Cart cart, Long productId) {
@@ -109,8 +110,7 @@ public class CartServiceImpl implements CartService {
     private void recalculateCart(Cart cart) {
 
         cart.setTotalQuantity(cart.getItems().stream()
-                .map(CartItem::getQuantity)
-                .mapToInt(value -> value)
+                .mapToInt(CartItem::getQuantity)
                 .sum());
 
         cart.setTotalCost(cart.getItems().stream()

@@ -52,13 +52,18 @@ public class CartPageServlet extends HttpServlet {
                 Cart cart = cartService.getCart(req);
                 cartService.update(cart, productId, quantity);
 
-                resp.sendRedirect(req.getContextPath() + "/cart?message=Cart updated successfully");
             }
             catch (NumberFormatException | ParseException | OutOfStockException ex) {
                 ServletUtil.handleError(errors,productId,ex);
-                req.setAttribute("errors",errors);
-                doGet(req,resp);
             }
+        }
+
+        if (errors.isEmpty()) {
+            resp.sendRedirect(req.getContextPath() + "/cart?message=Cart updated successfully");
+        }
+        else {
+            req.setAttribute("errors",errors);
+            doGet(req,resp);
         }
     }
 
