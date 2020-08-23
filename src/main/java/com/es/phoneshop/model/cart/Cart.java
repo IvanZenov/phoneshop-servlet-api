@@ -1,11 +1,13 @@
 package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.entity.BaseEntity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cart implements Serializable {
+public class Cart extends BaseEntity implements Serializable, Cloneable {
 
     private List<CartItem> items;
 

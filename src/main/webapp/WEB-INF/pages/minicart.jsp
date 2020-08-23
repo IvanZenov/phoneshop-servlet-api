@@ -5,4 +5,4 @@
 
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 
-Cart: ${cart.totalQuantity} items
+<a href="${pageContext.request.contextPath}/cart" style="color: #2b2b2b">Cart:</a> ${cart.totalQuantity} items

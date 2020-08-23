@@ -1,9 +1,9 @@
-package com.es.phoneshop.model.service.impl;
+package com.es.phoneshop.service.impl;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
-import com.es.phoneshop.model.dao.ProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.service.RecentlyViewProductService;
+import com.es.phoneshop.service.RecentlyViewProductService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
     private static volatile RecentlyViewProductServiceImpl INSTANCE;
     private static final String RECENTLY_VIEW_SESSION_ATTRIBUTE = RecentlyViewProductService.class.getName() + ".recentlyView";
     private static final int LIMIT_OF_VIEW_PRODUCT = 3;
-    private ProductDao productDao =  ArrayListProductDao.getInstance();
+    private ProductDao productDao = ArrayListProductDao.getInstance();
 
-    private RecentlyViewProductServiceImpl(){
+    private RecentlyViewProductServiceImpl() {
     }
 
     public static RecentlyViewProductServiceImpl getInstance() {
@@ -40,7 +40,7 @@ public class RecentlyViewProductServiceImpl implements RecentlyViewProductServic
 
     @Override
     public void add(List<Product> recentlyViewedProducts, Long productId) {
-        Product product = productDao.getProduct(productId);
+        Product product = productDao.getById(productId);
 
         if (recentlyViewedProducts.contains(product)) {
             recentlyViewedProducts.remove(product);

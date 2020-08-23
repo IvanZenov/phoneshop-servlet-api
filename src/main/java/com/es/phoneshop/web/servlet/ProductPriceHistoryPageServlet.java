@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.servlet;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.web.util.ServletUtil;
 
 import javax.servlet.ServletException;
@@ -16,7 +16,7 @@ public class ProductPriceHistoryPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String productId = req.getPathInfo();
-        req.setAttribute("product", ArrayListProductDao.getInstance().getProduct(Long.valueOf(productId.substring(1))));
+        req.setAttribute("product", ArrayListProductDao.getInstance().getById(Long.valueOf(productId.substring(1))));
         req.getRequestDispatcher(ServletUtil.createViewPath(PRODUCT_HISTORY_PAGE_JSP)).forward(req, resp);
     }
 }

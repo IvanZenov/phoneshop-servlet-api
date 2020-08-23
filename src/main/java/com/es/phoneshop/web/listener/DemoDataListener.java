@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.listener;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.PriceHistory;
 import com.es.phoneshop.model.product.Product;
 
@@ -18,7 +18,7 @@ public class DemoDataListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         boolean insertDemoData = Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertDemoData"));
         if (insertDemoData) {
-            for (Product product : createProducts()){
+            for (Product product : createProducts()) {
                 ArrayListProductDao.getInstance().save(product);
             }
         }
@@ -64,9 +64,9 @@ public class DemoDataListener implements ServletContextListener {
     private static List<PriceHistory> addPriceHistory(BigDecimal price) {
         List<PriceHistory> priceHistory = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");
-        priceHistory.add(new PriceHistory(LocalDate.of(2020,7,2), price.add(new BigDecimal(30)), usd));
-        priceHistory.add(new PriceHistory(LocalDate.of(2020,7,28), price.add(new BigDecimal(20)), usd));
-        priceHistory.add(new PriceHistory(LocalDate.of(2020,8,20), price.add(new BigDecimal(10)), usd));
+        priceHistory.add(new PriceHistory(LocalDate.of(2020, 7, 2), price.add(new BigDecimal(30)), usd));
+        priceHistory.add(new PriceHistory(LocalDate.of(2020, 7, 28), price.add(new BigDecimal(20)), usd));
+        priceHistory.add(new PriceHistory(LocalDate.of(2020, 8, 20), price.add(new BigDecimal(10)), usd));
         return priceHistory;
     }
 }

@@ -1,25 +1,28 @@
 package com.es.phoneshop.model.product;
 
-import java.io.Serializable;
+import com.es.phoneshop.model.entity.BaseEntity;
+
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Product implements Serializable {
-    private Long id;
+public class Product extends BaseEntity {
     private String code;
     private String description;
-    /** null means there is no price because the product is outdated or new */
+    /**
+     * null means there is no price because the product is outdated or new
+     */
     private BigDecimal price;
-    /** can be null if the price is null */
+    /**
+     * can be null if the price is null
+     */
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private static AtomicLong atomicLong = new AtomicLong(0);
     private List<PriceHistory> histories;
-
+    private static AtomicLong atomicLong = new AtomicLong(0);
 
     public Product() {
     }
@@ -34,14 +37,6 @@ public class Product implements Serializable {
         this.price = price;
         this.imageUrl = imageUrl;
         this.histories = histories;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCode() {

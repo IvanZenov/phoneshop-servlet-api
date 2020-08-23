@@ -1,6 +1,6 @@
-package com.es.phoneshop.model.service.impl;
+package com.es.phoneshop.service.impl;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.enums.SortFieldWithComparator;
 import com.es.phoneshop.model.enums.SortOrder;
 import com.es.phoneshop.model.product.Product;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class ProductService {
     private static volatile ProductService INSTANCE;
+
     private ProductService() {
     }
 
@@ -29,33 +30,31 @@ public class ProductService {
 
     public List<Product> findProducts(String query) {
         List<Product> products = ArrayListProductDao.getInstance().findProducts();
-        if (query != null && !query.isEmpty()){
+        if (query != null && !query.isEmpty()) {
             return products.stream()
                     .filter(product -> Arrays.stream(query.split(" "))
                             .allMatch(word ->
                                     Arrays.stream(product.getDescription().split(" ")).anyMatch(desc -> desc.contains(word))))
-                    .sorted(Comparator.comparing(product -> numberOfMatch(query,product.getDescription()),Comparator.reverseOrder()))
+                    .sorted(Comparator.comparing(product -> numberOfMatch(query, product.getDescription()), Comparator.reverseOrder()))
                     .collect(Collectors.toList());
-        }
-        else {
+        } else {
             return products;
         }
     }
 
-    public List<Product> sortProductsWithField(List<Product> products,String sortField, SortOrder sortOrder) {
+    public List<Product> sortProductsWithField(List<Product> products, String sortField, SortOrder sortOrder) {
         if (sortField.equals("DEFAULT") && SortOrder.DEFAULT == sortOrder) {
             return products;
-        }
-        else {
+        } else {
             return products
                     .stream()
-                    .sorted(SortFieldWithComparator.sortBy(sortField,sortOrder))
+                    .sorted(SortFieldWithComparator.sortBy(sortField, sortOrder))
                     .collect(Collectors.toList());
         }
     }
 
     private double numberOfMatch(String query, String desc) {
-        return query.split(" ").length/desc.split(" ").length;
+        return query.split(" ").length / desc.split(" ").length;
     }
 
 }

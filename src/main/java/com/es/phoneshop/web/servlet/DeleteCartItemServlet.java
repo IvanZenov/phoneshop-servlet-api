@@ -1,8 +1,8 @@
 package com.es.phoneshop.web.servlet;
 
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.service.CartService;
-import com.es.phoneshop.model.service.impl.CartServiceImpl;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.impl.CartServiceImpl;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -27,7 +27,7 @@ public class DeleteCartItemServlet extends HttpServlet {
         Long productId = Long.valueOf(productIdString);
 
         Cart cart = cartService.getCart(req);
-        cartService.delete(cart,productId);
+        cartService.delete(cart, productId);
 
         resp.sendRedirect(req.getContextPath() + "/cart?message=Cart item removed successfully");
     }

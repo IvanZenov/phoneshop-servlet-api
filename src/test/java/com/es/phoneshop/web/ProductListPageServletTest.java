@@ -1,8 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.service.impl.ProductService;
-import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
+import com.es.phoneshop.service.impl.RecentlyViewProductServiceImpl;
 import com.es.phoneshop.web.servlet.ProductListPageServlet;
 import org.junit.Before;
 import org.junit.Test;
