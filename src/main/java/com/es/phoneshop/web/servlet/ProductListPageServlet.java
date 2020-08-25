@@ -65,6 +65,7 @@ public class ProductListPageServlet extends HttpServlet {
 
         Map<Long, String> errors = new HashMap<>();
 
+
         Long productId = Long.valueOf(productIdString);
 
         int quantity;

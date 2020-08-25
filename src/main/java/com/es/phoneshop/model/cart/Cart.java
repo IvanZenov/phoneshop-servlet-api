@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cart extends BaseEntity implements Serializable, Cloneable {
+public class Cart extends BaseEntity {
 
     private List<CartItem> items;
 

@@ -1,6 +1,7 @@
 package com.es.phoneshop.dao.impl;
 
 import com.es.phoneshop.dao.OrderDao;
+import com.es.phoneshop.exceptions.OrderNotFoundException;
 import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.order.Order;
 
@@ -30,6 +31,6 @@ public class OrderDaoImpl extends AbstractRealizationDao<Order> implements Order
         return super.entities.stream()
                 .filter(order -> order.getSecureId().equals(secureId))
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order with secureId" + secureId + "not found"));
     }
 }

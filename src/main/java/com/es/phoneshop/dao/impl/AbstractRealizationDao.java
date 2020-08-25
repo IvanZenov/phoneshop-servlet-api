@@ -41,7 +41,7 @@ public abstract class AbstractRealizationDao<T extends BaseEntity> implements Da
         return entities.stream()
                 .filter(product -> id.equals(product.getId()))
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new RuntimeException("Entity with id " + id + " not found"));
     }
 
     @Override

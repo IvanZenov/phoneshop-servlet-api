@@ -1,11 +1,12 @@
 package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.entity.BaseEntity;
 import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CartItem implements Serializable, Cloneable {
+public class CartItem extends BaseEntity {
 
     private Product product;
     private int quantity;

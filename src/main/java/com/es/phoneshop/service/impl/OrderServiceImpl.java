@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
             try {
                 return (CartItem) item.clone();
             } catch (CloneNotSupportedException ex) {
-                throw new RuntimeException();
+                throw new RuntimeException("Not supported to clone CartItem" + item.getId(), ex);
             }
         }).collect(Collectors.toList()));
 
