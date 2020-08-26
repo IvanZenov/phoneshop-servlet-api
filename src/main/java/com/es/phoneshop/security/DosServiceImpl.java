@@ -6,12 +6,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DosServiceImpl implements DefaultDosService {
 
-    private static final long THRESHOLD = 10;
+    private static final long THRESHOLD = 1000;
     private Map<String, Long> countMap = new ConcurrentHashMap<>();
     private static volatile DosServiceImpl INSTANCE;
 
     private volatile Date lastResetDate = new Date();
-    private static final long HISTORY_LIFESPAN = 60_000;
+    private static final long HISTORY_LIFESPAN = 60000L;
 
     private DosServiceImpl() {
     }
@@ -29,7 +29,7 @@ public class DosServiceImpl implements DefaultDosService {
 
     @Override
     public boolean isAllowed(String ip) {
-        resetHistoryAfterTimeExpired();
+        //resetHistoryAfterTimeExpired();
         Long count = countMap.get(ip);
         if (count == null) {
             count = 1L;
