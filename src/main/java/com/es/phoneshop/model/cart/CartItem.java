@@ -1,11 +1,12 @@
 package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.entity.BaseEntity;
 import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CartItem implements Serializable {
+public class CartItem extends BaseEntity {
 
     private Product product;
     private int quantity;
@@ -48,5 +49,10 @@ public class CartItem implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(product, quantity);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

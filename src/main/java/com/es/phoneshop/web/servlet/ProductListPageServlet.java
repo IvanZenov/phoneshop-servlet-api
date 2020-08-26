@@ -2,13 +2,13 @@ package com.es.phoneshop.web.servlet;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.enums.SortOrder;
-import com.es.phoneshop.model.exceptions.OutOfStockException;
+import com.es.phoneshop.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.service.CartService;
-import com.es.phoneshop.model.service.RecentlyViewProductService;
-import com.es.phoneshop.model.service.impl.CartServiceImpl;
-import com.es.phoneshop.model.service.impl.ProductService;
-import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.RecentlyViewProductService;
+import com.es.phoneshop.service.impl.CartServiceImpl;
+import com.es.phoneshop.service.impl.ProductService;
+import com.es.phoneshop.service.impl.RecentlyViewProductServiceImpl;
 import com.es.phoneshop.web.util.ServletUtil;
 
 import javax.servlet.ServletConfig;
@@ -65,6 +65,7 @@ public class ProductListPageServlet extends HttpServlet {
 
         Map<Long, String> errors = new HashMap<>();
 
+
         Long productId = Long.valueOf(productIdString);
 
         int quantity;
@@ -76,7 +77,7 @@ public class ProductListPageServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/cart?message=Item successfully added to cart");
 
         } catch (NumberFormatException | ParseException | OutOfStockException ex) {
-            ServletUtil.handleError(errors,productId,ex);
+            ServletUtil.handleError(errors, productId, ex);
 
             req.setAttribute("errors", errors);
             doGet(req, resp);

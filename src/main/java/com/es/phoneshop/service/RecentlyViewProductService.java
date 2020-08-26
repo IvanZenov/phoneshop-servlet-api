@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.service;
+package com.es.phoneshop.service;
 
 import com.es.phoneshop.model.product.Product;
 
@@ -8,5 +8,6 @@ import java.util.List;
 public interface RecentlyViewProductService {
 
     List<Product> getRecentlyViewProduct(HttpServletRequest request);
+
     void add(List<Product> recentlyViewedProducts, Long productId);
 }

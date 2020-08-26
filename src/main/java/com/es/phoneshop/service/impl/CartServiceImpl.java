@@ -1,15 +1,16 @@
-package com.es.phoneshop.model.service.impl;
+package com.es.phoneshop.service.impl;
 
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
+import com.es.phoneshop.exceptions.OutOfStockException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
-import com.es.phoneshop.model.dao.ArrayListProductDao;
-import com.es.phoneshop.model.dao.ProductDao;
-import com.es.phoneshop.model.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.service.CartService;
+import com.es.phoneshop.service.CartService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
@@ -18,6 +19,7 @@ public class CartServiceImpl implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = CartServiceImpl.class.getName() + ".cart";
 
     private static volatile CartServiceImpl INSTANCE;
+
     private CartServiceImpl() {
         productDao = ArrayListProductDao.getInstance();
     }
@@ -45,10 +47,10 @@ public class CartServiceImpl implements CartService {
     @Override
     public void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
 
-        Product product = productDao.getProduct(productId);
+        Product product = productDao.getById(productId);
 
         if (product.getStock() < quantity) {
-            throw new OutOfStockException(product,quantity,product.getStock());
+            throw new OutOfStockException(product, quantity, product.getStock());
         }
 
         Optional<CartItem> productInCart = getOptionalCartItem(cart, productId);
@@ -56,9 +58,8 @@ public class CartServiceImpl implements CartService {
         if (productInCart.isPresent()) {
             CartItem cartItem = productInCart.get();
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
-        }
-        else {
-            cart.getItems().add(new CartItem(product,quantity));
+        } else {
+            cart.getItems().add(new CartItem(product, quantity));
         }
 
         //don't control if the user changes their mind
@@ -68,18 +69,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Cart cart, Long productId, int quantity) throws OutOfStockException {
-        Product product = productDao.getProduct(productId);
+        Product product = productDao.getById(productId);
 
-        Optional<CartItem> productInCart = getOptionalCartItem(cart,productId);
+        Optional<CartItem> productInCart = getOptionalCartItem(cart, productId);
 
         int productInCartQuantity = productInCart.map(CartItem::getQuantity).orElse(0);
 
         //add method change the product directly, so we return what was in the cart to product
         if (product.getStock() + productInCartQuantity < quantity) {
-            throw new OutOfStockException(product,quantity,product.getStock() + productInCartQuantity);
+            throw new OutOfStockException(product, quantity, product.getStock() + productInCartQuantity);
         }
 
-        productInCart.ifPresent( cartItem -> {
+        productInCart.ifPresent(cartItem -> {
             cartItem.setQuantity(quantity);
 
             product.setStock(product.getStock() + productInCartQuantity - quantity);
@@ -101,7 +102,13 @@ public class CartServiceImpl implements CartService {
         });
     }
 
-    private Optional<CartItem> getOptionalCartItem (Cart cart, Long productId) {
+    @Override
+    public void deleteAll(Cart cart) {
+        cart.getItems().removeAll(cart.getItems());
+        recalculateCart(cart);
+    }
+
+    private Optional<CartItem> getOptionalCartItem(Cart cart, Long productId) {
         return cart.getItems().stream()
                 .filter(cartItem -> productId.equals(cartItem.getProduct().getId()))
                 .findAny();
@@ -118,6 +125,6 @@ public class CartServiceImpl implements CartService {
                         .getPrice()
                         .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
                 )
-                .reduce(BigDecimal.ZERO,BigDecimal::add));
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 }

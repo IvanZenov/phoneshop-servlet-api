@@ -1,8 +1,8 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
+import com.es.phoneshop.service.impl.RecentlyViewProductServiceImpl;
 import com.es.phoneshop.web.servlet.ProductDetailsPageServlet;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class ProductDetailsPageServletTest {
         when(request.getSession()).thenReturn(session);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getPathInfo()).thenReturn("/1");
-        when(arrayListProductDao.getProduct(1L)).thenReturn(product);
+        when(arrayListProductDao.getById(1L)).thenReturn(product);
         when(request.getRequestDispatcher("/WEB-INF/pages/product.jsp")).thenReturn(requestDispatcher);
         //Returns null
         when(viewProductService.getRecentlyViewProduct(request)).thenReturn(recentlyView);

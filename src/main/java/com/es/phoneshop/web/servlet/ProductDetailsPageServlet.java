@@ -1,15 +1,15 @@
 package com.es.phoneshop.web.servlet;
 
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.dao.ArrayListProductDao;
-import com.es.phoneshop.model.dao.ProductDao;
-import com.es.phoneshop.model.exceptions.OutOfStockException;
-import com.es.phoneshop.model.exceptions.ProductNotFoundException;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exceptions.OutOfStockException;
+import com.es.phoneshop.exceptions.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.service.CartService;
-import com.es.phoneshop.model.service.RecentlyViewProductService;
-import com.es.phoneshop.model.service.impl.CartServiceImpl;
-import com.es.phoneshop.model.service.impl.RecentlyViewProductServiceImpl;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.RecentlyViewProductService;
+import com.es.phoneshop.service.impl.CartServiceImpl;
+import com.es.phoneshop.service.impl.RecentlyViewProductServiceImpl;
 import com.es.phoneshop.web.util.ServletUtil;
 
 import javax.servlet.ServletConfig;
@@ -42,9 +42,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
         List<Product> recentlyView = viewProductService.getRecentlyViewProduct(req);
         try {
             Long id = parseProductId(req);
-            viewProductService.add(recentlyView,productDao.getProduct(id).getId());
+            viewProductService.add(recentlyView,productDao.getById(id).getId());
 
-            req.setAttribute("product", productDao.getProduct(id));
+            req.setAttribute("product", productDao.getById(id));
             req.setAttribute("cart",cartService.getCart(req));
             req.setAttribute("viewProducts", viewProductService.getRecentlyViewProduct(req));
 

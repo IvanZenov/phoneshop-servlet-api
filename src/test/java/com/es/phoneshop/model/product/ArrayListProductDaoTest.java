@@ -1,8 +1,8 @@
 package com.es.phoneshop.model.product;
 
-import com.es.phoneshop.model.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.impl.ArrayListProductDao;
 import com.es.phoneshop.model.enums.SortOrder;
-import com.es.phoneshop.model.service.impl.ProductService;
+import com.es.phoneshop.service.impl.ProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +69,7 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void testGetProduct() {
-        assertEquals(arrayListProductDao.getProduct(1L).getId(), product1.getId());
+        assertEquals(arrayListProductDao.getById(1L).getId(), product1.getId());
     }
 
     @Test

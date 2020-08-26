@@ -10,6 +10,7 @@ public enum SortFieldWithComparator {
     DEFAULT();
 
     private Comparator<Product> comparator;
+
     SortFieldWithComparator(Comparator<Product> comparator) {
         this.comparator = comparator;
     }
@@ -21,8 +22,7 @@ public enum SortFieldWithComparator {
         Comparator<Product> comparator = valueOf(key).comparator;
         if (SortOrder.ASC == sortOrder) {
             return comparator;
-        }
-        else {
+        } else {
             return comparator.reversed();
         }
     }

@@ -1,9 +1,9 @@
 package com.es.phoneshop.web.servlet;
 
+import com.es.phoneshop.exceptions.OutOfStockException;
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.exceptions.OutOfStockException;
-import com.es.phoneshop.model.service.CartService;
-import com.es.phoneshop.model.service.impl.CartServiceImpl;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.impl.CartServiceImpl;
 import com.es.phoneshop.web.util.ServletUtil;
 
 import javax.servlet.ServletConfig;
@@ -32,7 +32,7 @@ public class CartPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cart cart = cartService.getCart(req);
         req.setAttribute("cart", cart);
-        req.getRequestDispatcher(ServletUtil.createViewPath(CART_PAGE_JSP)).forward(req,resp);
+        req.getRequestDispatcher(ServletUtil.createViewPath(CART_PAGE_JSP)).forward(req, resp);
     }
 
     @Override
@@ -40,9 +40,9 @@ public class CartPageServlet extends HttpServlet {
         String[] productIds = req.getParameterValues("productId");
         String[] quantities = req.getParameterValues("quantity");
 
-        Map<Long,String> errors = new HashMap<>();
+        Map<Long, String> errors = new HashMap<>();
 
-        for (int i = 0; i <productIds.length; i++) {
+        for (int i = 0; i < productIds.length; i++) {
             Long productId = Long.valueOf(productIds[i]);
 
             int quantity;
@@ -52,18 +52,16 @@ public class CartPageServlet extends HttpServlet {
                 Cart cart = cartService.getCart(req);
                 cartService.update(cart, productId, quantity);
 
-            }
-            catch (NumberFormatException | ParseException | OutOfStockException ex) {
-                ServletUtil.handleError(errors,productId,ex);
+            } catch (NumberFormatException | ParseException | OutOfStockException ex) {
+                ServletUtil.handleError(errors, productId, ex);
             }
         }
 
         if (errors.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/cart?message=Cart updated successfully");
-        }
-        else {
-            req.setAttribute("errors",errors);
-            doGet(req,resp);
+        } else {
+            req.setAttribute("errors", errors);
+            doGet(req, resp);
         }
     }
 
