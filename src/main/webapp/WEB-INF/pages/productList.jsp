@@ -8,7 +8,11 @@
     <p>
         Welcome to Expert-Soft training!
     </p>
-
+    <p>
+    <a href="${pageContext.request.contextPath}/advancedSearch">
+        Advanced Search
+    </a>
+    </p>
     <form action="" method="get">
         <label>
             <input type="text" name="query" value="${param.query}" placeholder="Search here...">
